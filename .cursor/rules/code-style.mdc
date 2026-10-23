@@ -1,0 +1,13 @@
+---
+description: JS style for the triage board
+alwaysApply: true
+---
+
+# Code style
+
+Match the file you are in. Don't restyle a file as a side effect of a fix.
+
+- Two-space indent, semicolons, `const` and `let`.
+- Prettier is set to single quotes, semicolons, and a 90 character line (`.prettierrc`). Server files mostly follow that. `src/client/board.js` is still double quotes. Don't "fix" the whole client in an unrelated change.
+- No new framework, no second data store, no auth bolted on.
+- Prefer the helpers that already exist (`shapeBug`, `comparePriority`) over a one-off copy in the route.

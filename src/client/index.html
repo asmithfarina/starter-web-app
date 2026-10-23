@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Triage Board</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%231e4d3a'/%3E%3C/svg%3E"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="top">
+        <div class="brand">
+          <span class="mark" aria-hidden="true">Tb</span>
+          <div>
+            <p class="eyebrow">Northstar · internal</p>
+            <h1>Triage Board</h1>
+          </div>
+        </div>
+        <div class="top-actions">
+          <p id="stats" class="stats"></p>
+          <button id="new-bug" class="primary" type="button">New bug</button>
+        </div>
+      </header>
+
+      <p id="notice" class="notice" hidden role="status"></p>
+
+      <div class="layout">
+        <aside class="panel filters" aria-label="Filters">
+          <label class="field">
+            <span>Search</span>
+            <input id="q" type="search" placeholder="Title, customer, id" autocomplete="off" />
+          </label>
+          <label class="field">
+            <span>Status</span>
+            <select id="filter-status">
+              <option value="">Any status</option>
+              <option value="New">New</option>
+              <option value="Triaged">Triaged</option>
+              <option value="In Progress">In Progress</option>
+              <option value="Resolved">Resolved</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Priority</span>
+            <select id="filter-priority">
+              <option value="">All priorities</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Area</span>
+            <select id="filter-area">
+              <option value="">All areas</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Source</span>
+            <select id="filter-source">
+              <option value="">Any source</option>
+              <option value="slack">Slack</option>
+              <option value="zendesk">Zendesk</option>
+              <option value="email">Email</option>
+              <option value="manual">Manual</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Owner</span>
+            <select id="filter-owner">
+              <option value="">All owners</option>
+              <option value="unassigned">Unassigned</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Sort</span>
+            <select id="sort">
+              <option value="updated">Recently updated</option>
+              <option value="created">Newest</option>
+              <option value="priority">Priority</option>
+            </select>
+          </label>
+          <button id="clear-filters" class="text-btn" type="button">Clear filters</button>
+        </aside>
+
+        <main class="panel table-card">
+          <div class="table-toolbar">
+            <p id="result-count"></p>
+          </div>
+          <div class="table-wrap">
+            <table class="bug-table">
+              <thead>
+                <tr>
+                  <th scope="col">ID</th>
+                  <th scope="col">
+                    <button type="button" data-sort="priority">Priority</button>
+                  </th>
+                  <th scope="col">Title</th>
+                  <th scope="col">Area</th>
+                  <th scope="col">Source</th>
+                  <th scope="col">Owner</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">
+                    <button type="button" data-sort="updated">Updated</button>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+          <p id="empty" class="empty" hidden>Nothing matches. Clear the filters or file a new bug.</p>
+          <p class="footnote">
+            Working copy is <code>data/bugs.json</code>. Not the system of record.
+          </p>
+        </main>
+      </div>
+    </div>
+
+    <div id="backdrop" class="backdrop" hidden></div>
+    <aside id="drawer" class="drawer" hidden aria-labelledby="drawer-heading">
+      <form id="bug-form" autocomplete="off">
+        <div class="drawer-head">
+          <h2 id="drawer-heading">New bug</h2>
+          <button id="close-drawer" class="text-btn" type="button">Close</button>
+        </div>
+        <p id="drawer-error" class="form-error" hidden></p>
+
+        <label class="field">
+          <span>Title</span>
+          <input id="f-title" maxlength="180" required />
+        </label>
+        <label class="field">
+          <span>What happened</span>
+          <textarea id="f-body" rows="6"></textarea>
+        </label>
+        <div class="split">
+          <label class="field">
+            <span>Source</span>
+            <select id="f-source">
+              <option value="slack">Slack</option>
+              <option value="zendesk">Zendesk</option>
+              <option value="email">Email</option>
+              <option value="manual">Manual</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Status</span>
+            <select id="f-status">
+              <option>New</option>
+              <option>Triaged</option>
+              <option>In Progress</option>
+              <option>Resolved</option>
+            </select>
+          </label>
+        </div>
+        <label class="field">
+          <span>Source ref</span>
+          <input id="f-ref" placeholder="#incidents or ZD-123" />
+        </label>
+        <div class="split">
+          <label class="field">
+            <span>Priority</span>
+            <select id="f-priority"></select>
+          </label>
+          <label class="field">
+            <span>Area</span>
+            <select id="f-area" required></select>
+          </label>
+        </div>
+        <div class="split">
+          <label class="field">
+            <span>Owner</span>
+            <input id="f-owner" list="owner-list" placeholder="Unassigned if empty" />
+            <datalist id="owner-list"></datalist>
+          </label>
+          <label class="field">
+            <span>Reporter</span>
+            <input id="f-reporter" placeholder="your name" />
+          </label>
+        </div>
+        <label class="field">
+          <span>Customer</span>
+          <input id="f-customer" />
+        </label>
+        <label class="field">
+          <span>Duplicate of</span>
+          <select id="f-dup"></select>
+        </label>
+
+        <div id="derived">
+          <p id="f-summary" class="blurb"></p>
+          <p id="f-next" class="next-step"></p>
+          <p id="f-times" class="muted times"></p>
+          <details>
+            <summary>Slack paste</summary>
+            <pre id="f-slack"></pre>
+          </details>
+        </div>
+
+        <div class="drawer-actions">
+          <button id="save-bug" class="primary" type="submit">Save</button>
+          <button id="cancel-bug" class="text-btn" type="button">Cancel</button>
+        </div>
+      </form>
+    </aside>
+
+    <script src="/board.js"></script>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+---
+description: Pause and log wrong claims when the user flags them
+alwaysApply: true
+---
+
+# Hallucination feedback
+
+When the user says something like "hallucination", "that's wrong", or "feedback":
+
+- Pause. Name the specific claim that was wrong.
+- Acknowledge it without defensiveness.
+- Offer to log it.
+
+If they agree, append an entry to `docs/hallucinations-feedback.md`. Include the date, what was claimed, why it was wrong, the correct info if they gave it, and the file or context involved. Don't edit past entries.

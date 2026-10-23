@@ -5,10 +5,8 @@ alwaysApply: true
 
 # Triage Board
 
-Small internal queue. Match the code around you. Don't add a framework, a second data store, or auth in a drive-by.
+Small internal queue. Match the code around you. Don't add a framework, a second data store, or auth in a drive-by. Bug-fix procedure lives in `bugfix.mdc` (cite the title, don't run destructive commands).
 
-- When you fix a bug, cite its title — the words on the card, not only `TB-1234` — in the commit message and in the PR.
-- Never auto-run destructive commands. That includes `git reset --hard`, `git push --force`, `git clean -fd`, `rm -rf`, and `npm run seed`. Seeding overwrites `data/bugs.json`.
 - Priorities stay whatever is already on the bug. Don't invent a second scale, and don't "clean up" odd labels while you're in the file for something else.
 - List responses stay `{ bugs, count }`. A single bug is the object itself, no wrapper.
 - The working copy is `data/bugs.json`. The seed is `data/seed-bugs.json`. Don't edit the seed to update one person's board.

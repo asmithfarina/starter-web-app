@@ -1,0 +1,12 @@
+---
+description: How tests are run on the triage board
+alwaysApply: true
+---
+
+# Testing
+
+Smoke tests live in `test/` and use `node:test`. No Jest, no extra runner.
+
+- `npm test` is what CI runs, after `npm run lint`.
+- Don't point a test at the shared `data/bugs.json`. Set `DATA_FILE` to a temp path, or read `data/seed-bugs.json`.
+- Coverage is thin on purpose. The HTTP routes are still untested. Add a case next to the behavior you change instead of a new framework.

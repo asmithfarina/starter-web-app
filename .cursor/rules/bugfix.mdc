@@ -1,0 +1,11 @@
+---
+description: How to fix a bug on the triage board
+alwaysApply: true
+---
+
+# Bug fixes
+
+- Cite the bug title, the words on the card, not only `TB-1234`, in the commit message and in the PR.
+- Reproduce it first. Say what you did (a sort, a filter, a request) and what the board actually showed.
+- Never auto-run destructive commands. That includes `git reset --hard`, `git push --force`, `git clean -fd`, `rm -rf`, and `npm run seed`. Seeding overwrites `data/bugs.json`.
+- One bug per change. Don't reformat the client or rename routes in the same commit.

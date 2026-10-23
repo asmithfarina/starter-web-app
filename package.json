@@ -1,0 +1,25 @@
+{
+  "name": "triage-board",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Internal triage queue for bugs coming in from Slack and Zendesk.",
+  "main": "src/server/index.js",
+  "scripts": {
+    "dev": "node --watch src/server/index.js",
+    "start": "node src/server/index.js",
+    "seed": "node scripts/seed.js",
+    "lint": "eslint src scripts",
+    "format": "prettier --write src scripts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "prettier": "^3.4.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

@@ -147,3 +147,7 @@ vite.config.ts.timestamp-*
 
 # Turbo Repo
 .turbo
+
+# working triage data (copied from data/seed-bugs.json on first run)
+data/bugs.json
+data/*.tmp

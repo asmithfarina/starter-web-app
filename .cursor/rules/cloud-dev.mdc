@@ -1,0 +1,13 @@
+---
+description: How to install and run the triage board in a cloud agent VM
+alwaysApply: true
+---
+
+# Cloud dev
+
+Same notes as `AGENTS.md` under "Cursor Cloud specific instructions". One Node process. No database and no Docker.
+
+- Node 22 is already on `PATH`. `./scripts/setup-dev.sh` only requires Node 18+. Do not add `nvm use`.
+- `./scripts/setup-dev.sh` copies `.env` from `.env.example` if needed, then `npm install` and `npm run lint`. It does not run tests. Run `npm test` after it. ESLint 8 deprecation warnings during install are expected.
+- `npm run dev` or `npm start` listens on port 3000 (`PORT` in `.env`). Ready log: `triage board http://localhost:3000`. `GET /api/health` returns `{ "ok": true }`. The first start creates gitignored `data/bugs.json` from the seed. Do not run `npm run seed` unless asked.
+- CI is `npm ci`, `npm run lint`, `npm test`. Do not run `npm run format` unless the task is to format the client (`src/client/board.js` is still double-quoted).

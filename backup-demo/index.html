@@ -920,9 +920,9 @@
       return luminance > 0.62 ? "#1A1C1F" : "#FFFFFF";
     }
 
-    function normalizeHex(value) {
+    function normalizeHex(value, expandShort) {
       var hex = String(value).trim().replace(/^#/, "");
-      if (/^[0-9a-fA-F]{3}$/.test(hex)) {
+      if (expandShort && /^[0-9a-fA-F]{3}$/.test(hex)) {
         hex = hex.split("").map(function (char) { return char + char; }).join("");
       }
       if (!/^[0-9a-fA-F]{6}$/.test(hex)) return null;
@@ -1043,6 +1043,12 @@
         apply();
       });
       hexInput.addEventListener("blur", function () {
+        var next = normalizeHex(hexInput.value, true);
+        if (next) {
+          state[key] = next;
+          if (key === "surface" || key === "text") surfaces[state.theme][key] = next;
+          apply();
+        }
         hexInput.value = state[key];
       });
     }

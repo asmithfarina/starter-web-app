@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Pocketbook — November budget</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app">
+      <aside class="sidebar">
+        <div class="brand">
+          <span class="logo" aria-hidden="true"></span>
+          <span class="brand-name">Pocketbook</span>
+        </div>
+        <nav class="nav" aria-label="Primary">
+          <button type="button" class="nav-item is-active" aria-current="page">
+            Overview
+          </button>
+          <button type="button" class="nav-item">Transactions</button>
+          <button type="button" class="nav-item">Budgets</button>
+          <button type="button" class="nav-item">Reports</button>
+          <button type="button" class="nav-item">Settings</button>
+        </nav>
+      </aside>
+
+      <main class="main">
+        <header class="topbar">
+          <div class="titles">
+            <h1 id="page-title">November budget</h1>
+            <p class="subtitle">Sample data for a design-to-code demo</p>
+          </div>
+          <button type="button" class="btn btn-add" id="focus-form">
+            + Add expense
+          </button>
+        </header>
+
+        <section class="stats" aria-label="Budget summary">
+          <article class="card stat">
+            <h2 class="stat-label">Spent this month</h2>
+            <p class="stat-value" id="spent-value">$0</p>
+            <p class="chip chip-muted" id="budget-chip">of $0 budget</p>
+          </article>
+          <article class="card stat">
+            <h2 class="stat-label">Left to spend</h2>
+            <p class="stat-value" id="left-value">$0</p>
+            <p class="chip chip-good" id="status-chip">On track</p>
+          </article>
+          <article class="card stat">
+            <h2 class="stat-label">Categories over limit</h2>
+            <p class="stat-value" id="over-value">0</p>
+            <p class="chip chip-muted" id="over-chip">None</p>
+          </article>
+        </section>
+
+        <section class="panels">
+          <article class="card panel">
+            <h2 class="panel-title">Spending by category</h2>
+            <div id="categories" class="categories"></div>
+          </article>
+
+          <article class="card panel">
+            <h2 class="panel-title">Add an expense</h2>
+            <form id="expense-form" autocomplete="off" novalidate>
+              <div class="field">
+                <label for="amount">Amount</label>
+                <input
+                  id="amount"
+                  name="amount"
+                  type="text"
+                  inputmode="decimal"
+                  placeholder="$0.00"
+                  aria-describedby="amount-error"
+                />
+                <p class="field-error" id="amount-error" hidden></p>
+              </div>
+              <div class="field">
+                <label for="category">Category</label>
+                <select
+                  id="category"
+                  name="category"
+                  class="is-placeholder"
+                  aria-describedby="category-error"
+                >
+                  <option value="">Choose a category</option>
+                </select>
+                <p class="field-error" id="category-error" hidden></p>
+              </div>
+              <div class="field">
+                <label for="note">Note</label>
+                <input
+                  id="note"
+                  name="note"
+                  type="text"
+                  placeholder="e.g. Lunch with team"
+                  maxlength="80"
+                />
+              </div>
+              <button type="submit" class="btn btn-save">Save expense</button>
+              <p class="fine-print" id="form-note" role="status">
+                All figures are fictional.
+              </p>
+            </form>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

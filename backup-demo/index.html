@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Design Tokens Playground</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%230D99FF'/%3E%3Crect x='3' y='3' width='4' height='4' rx='1' fill='white'/%3E%3Crect x='9' y='3' width='4' height='4' rx='1' fill='white' opacity='.7'/%3E%3Crect x='3' y='9' width='4' height='4' rx='1' fill='white' opacity='.7'/%3E%3Crect x='9' y='9' width='4' height='4' rx='1' fill='white'/%3E%3C/svg%3E" />
+  <style>
+    @font-face {
+      font-family: "Inter Fallback";
+      src: local("Inter"), local("Inter Regular");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Inter Fallback";
+      src: local("Inter Medium"), local("Inter");
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Inter Fallback";
+      src: local("Inter SemiBold"), local("Inter");
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --color-primary: #0D99FF;
+      --color-surface: #FFFFFF;
+      --color-text: #1A1C1F;
+      --on-primary: #FFFFFF;
+      --radius: 12px;
+      --space: 12px;
+      --font-size: 15px;
+      --space-1: calc(var(--space) * 0.5);
+      --space-2: var(--space);
+      --space-3: calc(var(--space) * 1.5);
+      --space-4: calc(var(--space) * 2);
+      --space-5: calc(var(--space) * 3);
+      --chrome-bg: #ECEDEF;
+      --chrome-panel: #FFFFFF;
+      --chrome-ink: #1A1C1F;
+      --chrome-muted: #5C6370;
+      --chrome-faint: #6A707A;
+      --chrome-line: #E4E6EB;
+      --chrome-track: #E1E3E8;
+      --chrome-fill: #1A1C1F;
+      --chrome-soft: #F4F5F7;
+      --chrome-code: #F6F7F9;
+      --chrome-raise: #FFFFFF;
+      --chrome-shadow: 0 0 0 1px rgba(22, 24, 29, 0.06), 0 1px 2px rgba(22, 24, 29, 0.04), 0 18px 50px rgba(22, 24, 29, 0.08);
+      color-scheme: light;
+    }
+
+    :root[data-theme="dark"] {
+      --chrome-bg: #111214;
+      --chrome-panel: #1A1B1E;
+      --chrome-ink: #F3F4F6;
+      --chrome-muted: #A7ACB5;
+      --chrome-faint: #8E939C;
+      --chrome-line: #2E3138;
+      --chrome-track: #343840;
+      --chrome-fill: #F3F4F6;
+      --chrome-soft: #22242A;
+      --chrome-code: #141518;
+      --chrome-raise: #2A2C32;
+      --chrome-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 18px 50px rgba(0, 0, 0, 0.45);
+      color-scheme: dark;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { height: 100%; }
+
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: Inter, "Inter Fallback", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--chrome-bg);
+      color: var(--chrome-ink);
+      font-size: 14px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    button, input { font: inherit; color: inherit; }
+    button { cursor: pointer; user-select: none; }
+    p, h1, h2, h3 { margin: 0; }
+
+    .app {
+      height: 100%;
+      display: flex;
+      min-height: 0;
+    }
+
+    .panel {
+      width: 400px;
+      flex: none;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      background: var(--chrome-panel);
+      border-right: 1px solid var(--chrome-line);
+    }
+
+    .panel-body {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      padding: 24px 24px 12px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--chrome-track) transparent;
+    }
+
+    .brand-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo {
+      width: 32px;
+      height: 32px;
+      flex: none;
+      display: grid;
+      place-items: center;
+      border-radius: 9px;
+      background: var(--color-primary);
+      color: var(--on-primary);
+    }
+
+    .logo svg { width: 16px; height: 16px; display: block; }
+
+    h1 {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.015em;
+      line-height: 1.25;
+    }
+
+    .brand-copy {
+      margin-top: 10px;
+      color: var(--chrome-muted);
+      font-size: 13px;
+      line-height: 1.45;
+      max-width: 34ch;
+    }
+
+    .section { margin-top: 16px; }
+
+    .section-label {
+      margin-bottom: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--chrome-faint);
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      padding: 3px;
+      border: 1px solid var(--chrome-line);
+      border-radius: 10px;
+      background: var(--chrome-soft);
+    }
+
+    .segmented button {
+      height: 32px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: var(--chrome-muted);
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .segmented button svg { width: 14px; height: 14px; display: block; }
+
+    .segmented button[aria-pressed="true"] {
+      background: var(--chrome-raise);
+      color: var(--chrome-ink);
+      font-weight: 600;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 0, 0, 0.04);
+    }
+
+    :root[data-theme="dark"] .segmented button[aria-pressed="true"] {
+      box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06);
+    }
+
+    .color-list {
+      border: 1px solid var(--chrome-line);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .color-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 8px 10px 8px 14px;
+    }
+
+    .color-row + .color-row { border-top: 1px solid var(--chrome-line); }
+
+    .color-name {
+      flex: 1;
+      min-width: 0;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .swatch {
+      position: relative;
+      width: 32px;
+      height: 32px;
+      flex: 0 0 32px;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--chrome-line);
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+    }
+
+    .swatch input[type="color"] {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .swatch input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+
+    .swatch input[type="color"]::-webkit-color-swatch { border: 0; }
+
+    .swatch input[type="color"]::-moz-color-swatch { border: 0; }
+
+    .hex {
+      width: 92px;
+      height: 32px;
+      flex: none;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      background: var(--chrome-soft);
+      color: var(--chrome-ink);
+      font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 12px;
+      letter-spacing: 0.02em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .hex:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      background: var(--chrome-panel);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 24%, transparent);
+    }
+
+    .slider-block + .slider-block { margin-top: 14px; }
+
+    .slider-label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 6px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .slider-value {
+      color: var(--chrome-muted);
+      font-variant-numeric: tabular-nums;
+      font-weight: 500;
+      font-size: 12px;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      display: block;
+      width: 100%;
+      height: 18px;
+      margin: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    input[type="range"]:focus { outline: none; }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--chrome-fill) var(--pct), var(--chrome-track) var(--pct));
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      margin-top: -6px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.14);
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16);
+      cursor: grab;
+    }
+
+    input[type="range"]::-moz-range-track {
+      height: 4px;
+      border: 0;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--chrome-fill) var(--pct), var(--chrome-track) var(--pct));
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 1px solid rgba(0, 0, 0, 0.14);
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.16);
+      cursor: grab;
+    }
+
+    input[type="range"]:focus-visible::-webkit-slider-thumb {
+      box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-primary) 28%, transparent);
+    }
+
+    .css-out {
+      margin: 0;
+      padding: 10px 12px;
+      overflow: auto;
+      border: 1px solid var(--chrome-line);
+      border-radius: 12px;
+      background: var(--chrome-code);
+      color: var(--chrome-ink);
+      font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.45;
+      white-space: pre;
+    }
+
+    .tok-pun { color: var(--chrome-faint); }
+    .tok-prop { color: var(--chrome-muted); }
+
+    .panel-actions {
+      display: flex;
+      gap: 8px;
+      padding: 14px 24px 18px;
+      border-top: 1px solid var(--chrome-line);
+      background: var(--chrome-panel);
+    }
+
+    .action {
+      height: 38px;
+      padding: 0 14px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.01em;
+    }
+
+    .action:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    .action-ghost {
+      border: 1px solid var(--chrome-line);
+      background: transparent;
+      color: var(--chrome-ink);
+    }
+
+    .action-ghost:hover { background: var(--chrome-soft); }
+
+    .action-solid {
+      flex: 1;
+      border: 1px solid var(--chrome-ink);
+      background: var(--chrome-ink);
+      color: var(--chrome-panel);
+    }
+
+    .action-solid:hover { filter: brightness(1.08); }
+    .action-solid.is-copied { letter-spacing: 0; }
+
+    .stage {
+      flex: 1;
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      display: flex;
+      align-items: safe center;
+      justify-content: safe center;
+      padding: 40px 48px;
+      background: var(--chrome-bg);
+    }
+
+    .canvas-wrap { width: min(860px, 100%); }
+
+    .canvas-caption {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 10px;
+      padding: 0 4px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--chrome-muted);
+    }
+
+    .canvas-caption strong {
+      color: var(--chrome-ink);
+      font-weight: 600;
+    }
+
+    .frame {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-4);
+      padding: var(--space-5);
+      border-radius: var(--radius);
+      background: var(--color-surface);
+      color: var(--color-text);
+      box-shadow: var(--chrome-shadow);
+    }
+
+    .frame-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+
+    .frame-title {
+      font-size: calc(var(--font-size) * 1.35);
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      line-height: 1.2;
+    }
+
+    .frame-sub {
+      margin-top: var(--space-1);
+      color: color-mix(in srgb, var(--color-text) 62%, transparent);
+      font-size: var(--font-size);
+      line-height: 1.45;
+    }
+
+    .kicker {
+      margin-bottom: var(--space-2);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--color-text) 52%, transparent);
+    }
+
+    .badge-col { text-align: right; }
+    .badge-col .kicker { margin-bottom: var(--space-1); }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: calc(var(--space) * 0.4) calc(var(--space) * 0.9);
+      border-radius: var(--radius);
+      background: var(--color-primary);
+      color: var(--on-primary);
+      font-size: calc(var(--font-size) * 0.8);
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      line-height: 1.2;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(210px, 0.75fr);
+      gap: var(--space-3);
+      align-items: stretch;
+    }
+
+    .btn-block {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      min-width: 0;
+      padding: var(--space-4);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-2);
+    }
+
+    .btn {
+      border: 1px solid transparent;
+      border-radius: var(--radius);
+      padding: calc(var(--space) * 0.72) calc(var(--space) * 1.3);
+      font-size: var(--font-size);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .btn:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: var(--on-primary);
+    }
+
+    .btn-primary:hover {
+      background: color-mix(in srgb, var(--color-primary) 86%, #000);
+    }
+
+    .btn-secondary {
+      background: var(--color-surface);
+      color: var(--color-text);
+      border-color: color-mix(in srgb, var(--color-text) 16%, var(--color-surface));
+    }
+
+    .btn-secondary:hover {
+      background: color-mix(in srgb, var(--color-text) 5%, var(--color-surface));
+    }
+
+    .stat, .card {
+      border: 1px solid color-mix(in srgb, var(--color-text) 10%, transparent);
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--color-text) 4%, var(--color-surface));
+      padding: var(--space-4);
+    }
+
+    .stat {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat .kicker { margin-bottom: var(--space-1); }
+
+    .stat-value {
+      margin-top: calc(var(--space) * 0.35);
+      font-size: calc(var(--font-size) * 2.35);
+      font-weight: 600;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stat-label {
+      margin-top: calc(var(--space) * 0.7);
+      color: color-mix(in srgb, var(--color-text) 68%, transparent);
+      font-size: calc(var(--font-size) * 0.92);
+    }
+
+    .delta {
+      margin-top: calc(var(--space) * 0.85);
+      color: var(--color-primary);
+      font-size: calc(var(--font-size) * 0.86);
+      font-weight: 600;
+    }
+
+    .card-row {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-3);
+    }
+
+    .mark {
+      width: calc(var(--font-size) * 2.4);
+      height: calc(var(--font-size) * 2.4);
+      flex: none;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--color-primary) 16%, var(--color-surface));
+    }
+
+    .mark::after {
+      content: "";
+      width: 38%;
+      height: 38%;
+      border-radius: calc(var(--radius) * 0.45);
+      background: var(--color-primary);
+    }
+
+    .card h3 {
+      font-size: calc(var(--font-size) * 1.08);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+    }
+
+    .card p {
+      margin-top: calc(var(--space) * 0.45);
+      max-width: 52ch;
+      color: color-mix(in srgb, var(--color-text) 70%, transparent);
+      font-size: var(--font-size);
+      line-height: 1.5;
+    }
+
+    .field { min-width: 0; }
+
+    .text-input {
+      display: block;
+      width: 100%;
+      border: 1px solid color-mix(in srgb, var(--color-text) 16%, var(--color-surface));
+      border-radius: var(--radius);
+      background: var(--color-surface);
+      color: var(--color-text);
+      padding: calc(var(--space) * 0.68) calc(var(--space) * 1.05);
+      font-size: var(--font-size);
+      line-height: 1.3;
+    }
+
+    .text-input::placeholder {
+      color: color-mix(in srgb, var(--color-text) 42%, transparent);
+    }
+
+    .text-input:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 24%, transparent);
+    }
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+
+    .toggle-label {
+      font-size: var(--font-size);
+      font-weight: 500;
+    }
+
+    .switch {
+      width: 46px;
+      height: 26px;
+      flex: none;
+      padding: 3px;
+      border: 0;
+      border-radius: var(--radius);
+      background: color-mix(in srgb, var(--color-text) 18%, var(--color-surface));
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text) 8%, transparent);
+    }
+
+    .switch:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    .switch[aria-checked="true"] {
+      background: var(--color-primary);
+      box-shadow: none;
+    }
+
+    .thumb {
+      display: block;
+      width: 20px;
+      height: 20px;
+      border-radius: calc(var(--radius) * 0.65);
+      background: #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.22);
+      transform: translateX(0);
+      transition: transform 140ms ease;
+    }
+
+    .switch[aria-checked="true"] .thumb { transform: translateX(20px); }
+
+    .visually-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .thumb { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="panel">
+      <div class="panel-body">
+        <div class="brand">
+          <div class="brand-top">
+            <span class="logo" aria-hidden="true">
+              <svg viewBox="0 0 16 16">
+                <rect x="1" y="1" width="6" height="6" rx="1.4" fill="currentColor"/>
+                <rect x="9" y="1" width="6" height="6" rx="1.4" fill="currentColor" opacity=".55"/>
+                <rect x="1" y="9" width="6" height="6" rx="1.4" fill="currentColor" opacity=".55"/>
+                <rect x="9" y="9" width="6" height="6" rx="1.4" fill="currentColor"/>
+              </svg>
+            </span>
+            <h1>Design Tokens Playground</h1>
+          </div>
+          <p class="brand-copy">Edit a token. Every component on the sheet reads it from a CSS variable.</p>
+        </div>
+
+        <section class="section" aria-labelledby="appearance-label">
+          <h2 class="section-label" id="appearance-label">Appearance</h2>
+          <div class="segmented" role="group" aria-label="Theme">
+            <button type="button" id="theme-light" aria-pressed="true">
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <circle cx="8" cy="8" r="2.3" fill="currentColor"/>
+                <path d="M8 1.7v1.6M8 12.7v1.6M1.7 8h1.6M12.7 8h1.6M3.4 3.4l1.15 1.15M11.45 11.45l1.15 1.15M3.4 12.6l1.15-1.15M11.45 4.55l1.15-1.15" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>
+              </svg>
+              Light
+            </button>
+            <button type="button" id="theme-dark" aria-pressed="false">
+              <svg viewBox="0 0 16 16" aria-hidden="true">
+                <path fill="currentColor" d="M9.15 1.55a5.7 5.7 0 1 0 5.35 7.55A4.55 4.55 0 1 1 9.15 1.55z"/>
+              </svg>
+              Dark
+            </button>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="color-label">
+          <h2 class="section-label" id="color-label">Color</h2>
+          <div class="color-list">
+            <label class="color-row">
+              <span class="color-name">Primary</span>
+              <span class="swatch"><input type="color" id="primary" value="#0d99ff" aria-label="Primary color" /></span>
+              <input class="hex" id="primary-hex" value="#0D99FF" spellcheck="false" maxlength="7" aria-label="Primary hex" autocomplete="off" />
+            </label>
+            <label class="color-row">
+              <span class="color-name">Surface</span>
+              <span class="swatch"><input type="color" id="surface" value="#ffffff" aria-label="Surface color" /></span>
+              <input class="hex" id="surface-hex" value="#FFFFFF" spellcheck="false" maxlength="7" aria-label="Surface hex" autocomplete="off" />
+            </label>
+            <label class="color-row">
+              <span class="color-name">Text</span>
+              <span class="swatch"><input type="color" id="text" value="#1a1c1f" aria-label="Text color" /></span>
+              <input class="hex" id="text-hex" value="#1A1C1F" spellcheck="false" maxlength="7" aria-label="Text hex" autocomplete="off" />
+            </label>
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="scale-label">
+          <h2 class="section-label" id="scale-label">Scale</h2>
+          <div class="slider-block">
+            <label class="slider-label" for="radius">Corner radius <span class="slider-value" id="radius-value">12px</span></label>
+            <input type="range" id="radius" min="0" max="24" step="1" value="12" style="--pct: 50%" />
+          </div>
+          <div class="slider-block">
+            <label class="slider-label" for="space">Spacing scale <span class="slider-value" id="space-value">12px</span></label>
+            <input type="range" id="space" min="4" max="16" step="1" value="12" style="--pct: 66.666%" />
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="type-label">
+          <h2 class="section-label" id="type-label">Type</h2>
+          <div class="slider-block">
+            <label class="slider-label" for="font-size">Font size <span class="slider-value" id="font-value">15px</span></label>
+            <input type="range" id="font-size" min="12" max="18" step="1" value="15" style="--pct: 50%" />
+          </div>
+        </section>
+
+        <section class="section" aria-labelledby="css-label">
+          <h2 class="section-label" id="css-label">CSS variables</h2>
+          <pre class="css-out" id="css-out" aria-label="Current CSS variables"></pre>
+        </section>
+      </div>
+
+      <div class="panel-actions">
+        <button type="button" class="action action-ghost" id="reset">Reset</button>
+        <button type="button" class="action action-solid" id="copy">Copy CSS variables</button>
+      </div>
+    </aside>
+
+    <main class="stage">
+      <div class="canvas-wrap">
+        <div class="canvas-caption">
+          <strong>Component sheet</strong>
+          <span>Live from CSS variables</span>
+        </div>
+        <div class="frame">
+          <header class="frame-head">
+            <div>
+              <h2 class="frame-title">Foundations</h2>
+              <p class="frame-sub">Buttons, surfaces, and type share one token set.</p>
+            </div>
+            <div class="badge-col">
+              <p class="kicker">Badge</p>
+              <span class="badge">Synced</span>
+            </div>
+          </header>
+
+          <div class="split">
+            <div class="btn-block">
+              <p class="kicker">Button</p>
+              <div class="btn-row">
+                <button type="button" class="btn btn-primary">Primary</button>
+                <button type="button" class="btn btn-secondary">Secondary</button>
+              </div>
+            </div>
+            <article class="stat">
+              <p class="kicker">Stat</p>
+              <p class="stat-value">1,284</p>
+              <p class="stat-label">Active editors</p>
+              <p class="delta">↑ 8.2% this week</p>
+            </article>
+          </div>
+
+          <article class="card">
+            <p class="kicker">Card</p>
+            <div class="card-row">
+              <span class="mark" aria-hidden="true"></span>
+              <div>
+                <h3>Token-driven surface</h3>
+                <p>Background, text, radius, and padding on this card update with the panel.</p>
+              </div>
+            </div>
+          </article>
+
+          <div class="field">
+            <label class="kicker" for="email">Input</label>
+            <input class="text-input" id="email" type="email" placeholder="name@company.com" autocomplete="off" />
+          </div>
+
+          <div class="toggle-row">
+            <div>
+              <p class="kicker">Toggle</p>
+              <p class="toggle-label">Publish changes</p>
+            </div>
+            <button type="button" class="switch" id="publish-switch" role="switch" aria-checked="true" aria-label="Publish changes">
+              <span class="thumb"></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+  <p id="status" class="visually-hidden" aria-live="polite"></p>
+
+  <script>
+    var DEFAULTS = {
+      theme: "light",
+      primary: "#0D99FF",
+      radius: 12,
+      space: 12,
+      fontSize: 15
+    };
+
+    var THEME_COLORS = {
+      light: { surface: "#FFFFFF", text: "#1A1C1F" },
+      dark: { surface: "#2B2D33", text: "#F3F4F6" }
+    };
+
+    var surfaces = {
+      light: { surface: THEME_COLORS.light.surface, text: THEME_COLORS.light.text },
+      dark: { surface: THEME_COLORS.dark.surface, text: THEME_COLORS.dark.text }
+    };
+
+    var state = {
+      theme: DEFAULTS.theme,
+      primary: DEFAULTS.primary,
+      surface: surfaces.light.surface,
+      text: surfaces.light.text,
+      radius: DEFAULTS.radius,
+      space: DEFAULTS.space,
+      fontSize: DEFAULTS.fontSize
+    };
+
+    var root = document.documentElement;
+    var primaryInput = document.getElementById("primary");
+    var surfaceInput = document.getElementById("surface");
+    var textInput = document.getElementById("text");
+    var primaryHex = document.getElementById("primary-hex");
+    var surfaceHex = document.getElementById("surface-hex");
+    var textHex = document.getElementById("text-hex");
+    var radiusInput = document.getElementById("radius");
+    var spaceInput = document.getElementById("space");
+    var fontInput = document.getElementById("font-size");
+    var cssOut = document.getElementById("css-out");
+    var copyButton = document.getElementById("copy");
+    var statusEl = document.getElementById("status");
+    var themeLight = document.getElementById("theme-light");
+    var themeDark = document.getElementById("theme-dark");
+    var copiedTimer = 0;
+
+    function onPrimary(hex) {
+      var raw = hex.replace("#", "");
+      var channels = [0, 2, 4].map(function (index) {
+        var value = parseInt(raw.slice(index, index + 2), 16) / 255;
+        return value <= 0.04045 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
+      });
+      var luminance = 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
+      return luminance > 0.62 ? "#1A1C1F" : "#FFFFFF";
+    }
+
+    function normalizeHex(value) {
+      var hex = String(value).trim().replace(/^#/, "");
+      if (/^[0-9a-fA-F]{3}$/.test(hex)) {
+        hex = hex.split("").map(function (char) { return char + char; }).join("");
+      }
+      if (!/^[0-9a-fA-F]{6}$/.test(hex)) return null;
+      return "#" + hex.toUpperCase();
+    }
+
+    function percent(value, min, max) {
+      return ((value - min) / (max - min)) * 100 + "%";
+    }
+
+    function cssText() {
+      return [
+        ":root {",
+        "  color-scheme: " + state.theme + ";",
+        "  --color-primary: " + state.primary + ";",
+        "  --color-surface: " + state.surface + ";",
+        "  --color-text: " + state.text + ";",
+        "  --radius: " + state.radius + "px;",
+        "  --space: " + state.space + "px;",
+        "  --font-size: " + state.fontSize + "px;",
+        "}"
+      ].join("\n");
+    }
+
+    function renderCss() {
+      var lines = cssText().split("\n");
+      cssOut.textContent = "";
+      lines.forEach(function (line, index) {
+        if (index) cssOut.appendChild(document.createTextNode("\n"));
+        var prop = line.match(/^(\s*)(--[\w-]+)(:\s*)([^;]+)(;)$/);
+        var scheme = line.match(/^(\s*)(color-scheme)(:\s*)([^;]+)(;)$/);
+        var match = prop || scheme;
+        if (!match) {
+          var plain = document.createElement("span");
+          plain.className = "tok-pun";
+          plain.textContent = line;
+          cssOut.appendChild(plain);
+          return;
+        }
+        var indent = document.createTextNode(match[1]);
+        var name = document.createElement("span");
+        name.className = "tok-prop";
+        name.textContent = match[2];
+        var mid = document.createElement("span");
+        mid.className = "tok-pun";
+        mid.textContent = match[3];
+        var value = document.createTextNode(match[4]);
+        var end = document.createElement("span");
+        end.className = "tok-pun";
+        end.textContent = match[5];
+        cssOut.appendChild(indent);
+        cssOut.appendChild(name);
+        cssOut.appendChild(mid);
+        cssOut.appendChild(value);
+        cssOut.appendChild(end);
+      });
+    }
+
+    function setHexField(field, value) {
+      if (document.activeElement !== field) field.value = value;
+    }
+
+    function apply() {
+      root.dataset.theme = state.theme;
+      root.style.setProperty("--color-primary", state.primary);
+      root.style.setProperty("--color-surface", state.surface);
+      root.style.setProperty("--color-text", state.text);
+      root.style.setProperty("--on-primary", onPrimary(state.primary));
+      root.style.setProperty("--radius", state.radius + "px");
+      root.style.setProperty("--space", state.space + "px");
+      root.style.setProperty("--font-size", state.fontSize + "px");
+
+      if (document.activeElement !== primaryInput) primaryInput.value = state.primary.toLowerCase();
+      if (document.activeElement !== surfaceInput) surfaceInput.value = state.surface.toLowerCase();
+      if (document.activeElement !== textInput) textInput.value = state.text.toLowerCase();
+      setHexField(primaryHex, state.primary);
+      setHexField(surfaceHex, state.surface);
+      setHexField(textHex, state.text);
+
+      radiusInput.value = String(state.radius);
+      spaceInput.value = String(state.space);
+      fontInput.value = String(state.fontSize);
+      radiusInput.style.setProperty("--pct", percent(state.radius, 0, 24));
+      spaceInput.style.setProperty("--pct", percent(state.space, 4, 16));
+      fontInput.style.setProperty("--pct", percent(state.fontSize, 12, 18));
+      document.getElementById("radius-value").textContent = state.radius + "px";
+      document.getElementById("space-value").textContent = state.space + "px";
+      document.getElementById("font-value").textContent = state.fontSize + "px";
+
+      themeLight.setAttribute("aria-pressed", state.theme === "light" ? "true" : "false");
+      themeDark.setAttribute("aria-pressed", state.theme === "dark" ? "true" : "false");
+      renderCss();
+    }
+
+    function setTheme(theme) {
+      if (state.theme === theme) return;
+      surfaces[state.theme].surface = state.surface;
+      surfaces[state.theme].text = state.text;
+      state.theme = theme;
+      state.surface = surfaces[theme].surface;
+      state.text = surfaces[theme].text;
+      apply();
+    }
+
+    function bindColor(key, colorInput, hexInput) {
+      colorInput.addEventListener("input", function () {
+        var next = normalizeHex(colorInput.value);
+        if (!next) return;
+        state[key] = next;
+        if (key === "surface" || key === "text") surfaces[state.theme][key] = next;
+        apply();
+      });
+      hexInput.addEventListener("input", function () {
+        var next = normalizeHex(hexInput.value);
+        if (!next) return;
+        state[key] = next;
+        if (key === "surface" || key === "text") surfaces[state.theme][key] = next;
+        apply();
+      });
+      hexInput.addEventListener("blur", function () {
+        hexInput.value = state[key];
+      });
+    }
+
+    function bindRange(input, key) {
+      input.addEventListener("input", function () {
+        state[key] = Number(input.value);
+        apply();
+      });
+    }
+
+    bindColor("primary", primaryInput, primaryHex);
+    bindColor("surface", surfaceInput, surfaceHex);
+    bindColor("text", textInput, textHex);
+    bindRange(radiusInput, "radius");
+    bindRange(spaceInput, "space");
+    bindRange(fontInput, "fontSize");
+
+    themeLight.addEventListener("click", function () { setTheme("light"); });
+    themeDark.addEventListener("click", function () { setTheme("dark"); });
+
+    document.getElementById("publish-switch").addEventListener("click", function () {
+      var on = this.getAttribute("aria-checked") !== "true";
+      this.setAttribute("aria-checked", on ? "true" : "false");
+    });
+
+    document.getElementById("reset").addEventListener("click", function () {
+      surfaces.light.surface = THEME_COLORS.light.surface;
+      surfaces.light.text = THEME_COLORS.light.text;
+      surfaces.dark.surface = THEME_COLORS.dark.surface;
+      surfaces.dark.text = THEME_COLORS.dark.text;
+      state.theme = DEFAULTS.theme;
+      state.primary = DEFAULTS.primary;
+      state.surface = surfaces.light.surface;
+      state.text = surfaces.light.text;
+      state.radius = DEFAULTS.radius;
+      state.space = DEFAULTS.space;
+      state.fontSize = DEFAULTS.fontSize;
+      apply();
+      statusEl.textContent = "Tokens reset.";
+    });
+
+    function legacyCopy(text) {
+      var area = document.createElement("textarea");
+      area.value = text;
+      area.setAttribute("readonly", "");
+      area.style.position = "fixed";
+      area.style.top = "0";
+      area.style.left = "0";
+      area.style.opacity = "0";
+      document.body.appendChild(area);
+      area.focus();
+      area.select();
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (error) { ok = false; }
+      document.body.removeChild(area);
+      return ok;
+    }
+
+    function markCopied() {
+      copyButton.classList.add("is-copied");
+      copyButton.textContent = "Copied";
+      statusEl.textContent = "Copied CSS variables.";
+      window.clearTimeout(copiedTimer);
+      copiedTimer = window.setTimeout(function () {
+        copyButton.classList.remove("is-copied");
+        copyButton.textContent = "Copy CSS variables";
+      }, 1600);
+    }
+
+    copyButton.addEventListener("click", function () {
+      var text = cssText() + "\n";
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(markCopied).catch(function () {
+          if (legacyCopy(text)) markCopied();
+        });
+        return;
+      }
+      if (legacyCopy(text)) markCopied();
+    });
+
+    apply();
+  </script>
+</body>
+</html>
